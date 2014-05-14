@@ -5,6 +5,8 @@ module.exports = function (grunt) {
     var pkg = grunt.file.readJSON('package.json'),
         distDir = './dist';
 
+    var projectDirName = require('path').basename(__dirname) || pkg.name;
+
     var version = utils.version.parse(pkg.version),
         versionString = utils.version.getCacheKey(version);
 
@@ -22,6 +24,7 @@ module.exports = function (grunt) {
             versionString : versionString
         },
 
+        projectDirName : projectDirName,
         distDir: distDir,
 
         clean: {
@@ -32,13 +35,12 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     mode: 'tgz',
-                    archive: '<%= distDir %>/<%= pkg.name %>-<%= version.versionString %>.tar.gz'
+                    archive: '<%= distDir %>/<%= pkg.name %>-<%= version.versionString %>.tgz'
                 },
                 files: [
-                    {expand: true, cwd: './', dot: true, src: [
-                        '**',
-                        '!**/.git/**',
-                        '!**/node_modules/**'
+                    {expand: true, cwd: '../', dot: false, src: [
+                        '<%=projectDirName%>/**',
+                        '!<%=projectDirName%>/**/node_modules/**'
                     ]}
                 ]
             }
